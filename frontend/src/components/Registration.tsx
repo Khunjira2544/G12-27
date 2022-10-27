@@ -36,7 +36,7 @@ function Registration() {
       field: "Subject",
       headerName: "รหัสวิชา",
       width: 200,
-      valueFormatter: (params) => params.value.CODE,
+      valueFormatter: (params) => params.value.Code,
     },
     {
       field: "State",

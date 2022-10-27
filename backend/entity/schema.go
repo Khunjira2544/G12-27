@@ -99,11 +99,11 @@ type Content_quality struct {
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 type Student struct {
 	gorm.Model
-	S_ID          string
-	Name          string
+	S_ID          string `gorm:"uniqueIndex"`
+	Name          string `gorm:"uniqueIndex"`
 	Gpax          float32
 	Date_of_birth string
-	Phone         string
+	Phone         string `gorm:"uniqueIndex"`
 	Parent        string
 	Password      string
 
@@ -157,7 +157,7 @@ type Teacher_assessment struct {
 // Teacher ของเพื่อน
 type Teacher struct {
 	gorm.Model
-	Name     string
+	Name     string `gorm:"uniqueIndex"`
 	Email    string `gorm:"uniqueIndex"`
 	Password string
 

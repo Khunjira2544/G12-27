@@ -125,3 +125,5 @@ func CreateStudent(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"data": Student})
 }
+
+//รับรหัสจากไครอัน ว่าเอามาเทียบกับถานข้อมูล

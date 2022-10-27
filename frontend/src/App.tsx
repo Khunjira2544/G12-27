@@ -103,6 +103,7 @@ const menu = [
   { name: "ระบบข้อมูลการลงทะเบียนเรียน", icon: <BookIcon />, path: "/registrations", role: 'student'},
 ];
 
+
 function App() {
   const [token, setToken] = useState<String>("");
   const [role, setRole] = useState<String | null>("");
@@ -253,4 +254,4 @@ function App() {
 }
 
 export default App;
-
+//<Route เร้าเตอร์ที่เซ็ตพาร์ต คล้ายๆ main.go 

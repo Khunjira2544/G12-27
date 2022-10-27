@@ -68,6 +68,8 @@ function App() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
+
+  //ฟังก์ชั่นมาควบคู่พวกcombobox //ไปหาข้อมูลเพิ่ม
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string

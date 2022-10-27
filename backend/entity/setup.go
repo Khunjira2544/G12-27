@@ -37,6 +37,13 @@ func SetupDatabase() {
 		//Registration
 		&State{},
 		&Registration{},
+
+		//ของภีม Teacher_assessment
+		&Teacher_assessment{},
+		&Teaching_duration{},
+		&Content_difficulty_level{},
+		&Content_quality{},
+
 	)
 
 	db = database

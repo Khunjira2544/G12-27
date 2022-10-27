@@ -8,14 +8,14 @@ import (
 )
 
 // GET /subject/:id
+// GET /student/:id
 func GetStudent(c *gin.Context) {
 	var student entity.Student
 	id := c.Param("id")
-	if tx := entity.DB().Where("id = ?", id).First(&student); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "officer not found"})
+	if err := entity.DB().Raw("SELECT * FROM students WHERE id = ?", id).Scan(&student).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": student})
 }
 
@@ -61,3 +61,6 @@ func UpdateStudent(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": student})
 }
+
+//ลองใส่ ขั้นตอน 8-9-10-11-12-13
+//ค้นว่ามี แล้วค่อยบันทึก
