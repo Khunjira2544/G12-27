@@ -24,12 +24,12 @@ function Subject() {
 
     const columns: GridColDef[] = [
         { field: "ID", headerName: "ลำดับ", width: 50 },
-        { field: "Code", headerName: "รหัสวิชา", width: 250 },
-        { field: "Name", headerName: "ชื่อวิชา", width: 250 },
-        { field: "Credit", headerName: "หน่วยกิต", width: 250 },
-        { field: "Section", headerName: "กลุ่ม", width: 250 },
-        { field: "Day", headerName: "วันที่เรียน", width: 250, },
-        { field: "Take", headerName: "รับ", width: 250 },
+        { field: "Code", headerName: "รหัสวิชา", width: 100 },
+        { field: "Name", headerName: "ชื่อวิชา", width: 120 },
+        { field: "Credit", headerName: "หน่วยกิต", width: 80 },
+        { field: "Section", headerName: "กลุ่ม", width: 50 },
+        { field: "Day", headerName: "วันที่เรียน", width: 80, },
+        { field: "Take", headerName: "รับ", width: 80 },
         { field: "Teacher", headerName: "อาจารย์ผู้สอน", width: 150, valueFormatter: (params) => params.value.Name, },
         { field: "Time", headerName: "ช่วงเวลาที่เปิดสอน", width: 150, valueFormatter: (params) => params.value.Period, },
         { field: "Faculty", headerName: "สำนักวิชา", width: 150, valueFormatter: (params) => params.value.Name, },

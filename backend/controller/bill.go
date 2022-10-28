@@ -17,6 +17,8 @@ func CreateBill(c *gin.Context) {
 	//เพิ่ม
 	var payment entity.Payment
 	var officer entity.Officer
+	var student entity.Student
+	var subject entity.Subject
 
 	if err := c.ShouldBindJSON(&bill); err != nil {
 
@@ -35,15 +37,26 @@ func CreateBill(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "officer not found"})
 		return
 	}
+
+	if tx := entity.DB().Where("id = ?", bill.StudentID).First(& student); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "student not found"})
+		return
+	}
+
+	if tx := entity.DB().Where("id = ?", bill.SubjectID).First(&subject); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "subject not found"})
+		return
+	}
 	//เพิ่ม
 
+	
 	b := entity.Bill{
 		Bill_ID:             bill.Bill_ID,
 		Datetimepay:         bill.Datetimepay,
-		Bill_StudentID:      bill.Bill_StudentID,
-		Bill_RegistrationID: bill.Bill_RegistrationID,
+		Student:           	 student,// โยงความสัมพันธ์กับ Entity Student
+		Subject:             subject,// โยงความสัมพันธ์กับ Entity Subject
 		Payment:             payment, // โยงความสัมพันธ์กับ Entity Payment
-		Officer:             officer, // โยงความสัมพันธ์กับ Entity User
+		Officer:             officer, // โยงความสัมพันธ์กับ Entity Officer
 		Total:               bill.Total,
 	}
 
@@ -83,7 +96,7 @@ func ListBills(c *gin.Context) {
 
 	var bills []entity.Bill
 
-	if err := entity.DB().Preload("Officer").Preload("Payment").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
+	if err := entity.DB().Preload("Officer").Preload("Payment").Preload("Student").Preload("Subject").Raw("SELECT * FROM bills").Find(&bills).Error; err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 
@@ -95,14 +108,31 @@ func ListBills(c *gin.Context) {
 
 }
 
-// Get previous bill id
-// GET /previous_bill
-func GetPreviousBill(c *gin.Context) {
+
+// DELETE /rooms/:id
+func DeleteBill(c *gin.Context) {
+	id := c.Param("bill_id")
+	if tx := entity.DB().Exec("DELETE FROM bills WHERE bill_id = ?", id); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bill not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": id})
+}
+
+// PATCH /rooms
+func UpdateBill(c *gin.Context) {
 	var bill entity.Bill
-	if err := entity.DB().Last(&bill).Error; err != nil {
+	if err := c.ShouldBindJSON(&bill); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	if tx := entity.DB().Where("id = ?", bill.Bill_ID).First(&bill); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "bill not found"})
+		return
+	}
+	if err := entity.DB().Save(&bill).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"data": bill})
 }

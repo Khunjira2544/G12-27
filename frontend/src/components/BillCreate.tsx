@@ -22,7 +22,11 @@ import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 
 import MenuItem from "@mui/material/MenuItem";
-
+//เพิ่ม
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+//เพิ่ม
 
 import Typography from "@mui/material/Typography";
 
@@ -34,8 +38,21 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 import { BillsInterface } from "../models/IBill";
 import { PaymentsInterface } from "../models/IPayment";
+import { OfficersInterface } from "../models/IOfficer";
+ //เพิ่ม
+import { StudentInterface } from "../models/IStudent";
+import { SubjectsInterface } from "../models/ISubject";
+
 
 import { SelectChangeEvent } from "@mui/material";
+import moment from 'moment';
+
+
+import{GetOfficerByUID,
+        Bills,
+    GetPayments,
+    GetSubjects,
+    GetStudents}from "../services/HttpClientService";
 
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -52,29 +69,26 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 
 function BillCreate() {
-  
-  
-
-  let [bill, setBill] = React.useState<Partial<BillsInterface>>({});
+  const [bill, setBill] = React.useState<Partial<BillsInterface>>({});
   const [payments, setPayments] = React.useState<PaymentsInterface[]>([]);
-
+//เพิ่ม
+  const [datetimepay, setDatetimepay] = React.useState<Date | null>(null);
+  const [officer, setOfficers] = React.useState<OfficersInterface>({});
+  const [student, setStudents] = React.useState<StudentInterface[]>([]);
+ const  [subject, setSubjects] = React.useState<SubjectsInterface[]>([]);
   const [success, setSuccess] = React.useState(false);
-
   const [error, setError] = React.useState(false);
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
-
     reason?: string
-  ) => {
+) => {
     if (reason === "clickaway") {
-      return;
+        return;
     }
-
     setSuccess(false);
-
     setError(false);
-  };
+};
 
   const handleInputChange = (
     event: React.ChangeEvent<{ id?: string; value: any }>
@@ -94,90 +108,90 @@ function BillCreate() {
     });
   };
 
-  const apiUrl = "http://localhost:8080";
-  const requestOptionsGet = {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-      "Content-Type": "application/json",
-    },
-  };
-
-  //Funtion get FK payment
-   const getPayments = async () => {
-    fetch(`${apiUrl}/payments`, requestOptionsGet)
-        .then((response) => response.json())
-        .then((res) => {
-            if (res.data) {
-                console.log(res.data)
-                setPayments(res.data);
-            } else {
-                console.log("else");
-            }
-        });
-
+  const getPayments = async () => {
+    let res = await GetPayments();
+    
+   console.log(res);
+    if (res) {
+        setPayments(res);
+    }
+};
+//New
+const getStudentID = async () => {
+  let res = await GetStudents();
+ 
+  console.log(res);
+  if (res) {
+      setStudents(res);
+  }
 };
 
+const getSubjects = async () => {
+  let res = await GetSubjects();
+  if (res) {
+      setSubjects(res);
+      console.log(res);
+  }
+};
+
+
+
+
+  //Funtion get FK payment
+   
+
   // fetch previous income record
-  const getPrevBill = async () => {
-    fetch(`${apiUrl}/previous_bill`, requestOptionsGet)
-        .then((response) => response.json())
-        .then((res) => {
-            if (res.data) {
-                bill.Bill_ID = res.data.Bill_ID + 1;
-            } else {
-                console.log("else");
-            }
-        });
+ 
+//New
+
+
+const getOfficersID = async () => {
+  let res = await GetOfficerByUID();
+  bill.OfficerID = res.ID;
+  console.log(bill.OfficerID);
+  if (res) {
+      setOfficers(res);
+  }
 };
 
 useEffect(() => {
-  getPrevBill();
   getPayments();
+  getOfficersID();
+  getSubjects()
+  getStudentID();
+  
     }, []);
 
 
 
-        function submit() {
+    const convertType = (data: string | number | undefined) => {
+      let val = typeof data === "string" ? parseInt(data) : data;
+      return val; 
+    };
+
+
+
+        async function submit() {
+          
           let data = {
-            Bill_StudentID: bill.Bill_StudentID ?? "",
-            Bill_RegistrationID: bill.Bill_RegistrationID ?? "",
-            Total: typeof bill.Total == "string" ? parseInt(bill.Total) : 0,
+            StudentID:convertType(bill.StudentID),
+            SubjectID: convertType(bill.SubjectID),
+            Total: convertType(bill.Total),
 
             //Combobox
-            Payment_ID: bill.Payment_ID ?? "",
-
-            Datetimepay: bill.Datetimepay,
-            Bill_OfficerID: bill.OfficerID ?? "",
-              
-              
-          
+            Payment_ID: (bill.Payment_ID),
+            Datetimepay: moment(datetimepay).format("YYYY-MM-DD"),
+            
+            OfficerID: convertType(bill.OfficerID),
           }
-          const apiUrl = "http://localhost:8080/bills";
-
-          const requestOptions = {
-            method: "POST",
-    
-            headers: { "Content-Type": "application/json" },
-    
-            body: JSON.stringify(data),
-          };
-    
-          fetch(apiUrl, requestOptions)
-            .then((response) => response.json())
-    
-            .then((res) => {
-              if (res.data) {
-                setSuccess(true);
-              } else {
-                setError(true);
-              }
-            });
-        }
-         
-        
-
-  return (
+          let res = await Bills(data);
+          if (res) {
+              setSuccess(true);
+          } else {
+              setError(true);
+          }}
+                 
+            return (
     <Container maxWidth="md">
       <Snackbar
         open={success}
@@ -220,36 +234,54 @@ useEffect(() => {
         <Grid container spacing={1} sx={{ padding: 2 }}>
 
         <Grid item xs={8} >
+        <FormControl fullWidth variant="outlined">
             <p>รหัสนักศึกษา</p>
 
-            <FormControl fullWidth variant="outlined">
-              <TextField
-                id="Bill_StudentID"
-                
-                type="string"
-                size="medium"
-                value={bill.Bill_StudentID || ""}
-                onChange={handleInputChange}
-                
-                
-              />
+            <Select
+                                variant="outlined"
+                                id="StudentID"
+                                label="รหัสนักศึกษา"
+                                value={bill.StudentID+""}
+                                onChange={handleSelectChange}
+                                inputProps={{
+                                    name: "StudentID",
+                                }}
+
+                            >
+                                {student.map((item: StudentInterface) => (
+                                    <MenuItem
+                                        value={item.ID}
+                                        key={item.ID}
+                                    >
+                                        {item.S_ID}
+                                    </MenuItem>
+                                ))}
+                            </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={8} >
+          <FormControl fullWidth variant="outlined">
             <p>ข้อมูลการลงทะเบียนเรียน</p>
 
-            <FormControl fullWidth variant="outlined">
-              <TextField
-                id="Bill_RegistrationID"
-                
-                type="string"
-                size="medium"
-                value={bill.Bill_RegistrationID || ""}
-                onChange={handleInputChange}
-                
-                
-              />
+            <Select
+              required
+              defaultValue={"0"}
+              onChange={handleSelectChange}
+              inputProps={{
+                name: "SubjectID",
+              }}
+            >
+              <MenuItem value={"0"}>กรุณาเลือกวิชา</MenuItem>
+                {subject.map((item: SubjectsInterface) => 
+                  <MenuItem
+                    key={item.ID}
+                    value={item.ID}
+                  >
+                    {item.Code}
+                  </MenuItem>
+                )}
+            </Select>
             </FormControl>
           </Grid>
 
@@ -259,7 +291,8 @@ useEffect(() => {
             <FormControl fullWidth variant="outlined">
               <TextField
                 id="Total"
-                
+                label="กรุณาระบุจำนวนเงินที่ชำระ"
+                InputProps={{inputProps:{min:0, max:1000000}}} 
                 type="number"
                 size="medium"
                 value={bill.Total || ""}
@@ -274,10 +307,12 @@ useEffect(() => {
             <p>ชำระผ่าน</p>
 
             <FormControl fullWidth variant="outlined">
+              
             
             <Select
                                 variant="outlined"
                                 id="Payment_ID"
+                                label="ธนาคารที่ชำระ"
                                 value={bill.Payment_ID}
                                 onChange={handleSelectChange}
                                 inputProps={{
@@ -299,18 +334,20 @@ useEffect(() => {
 
           <Grid item xs={8} >
             <p>วันที่ชำระ</p>
-
             <FormControl fullWidth variant="outlined">
-              <TextField
-                id="Datetimepay"
-                
-                type="string"
-                size="medium"
-                value={bill.Datetimepay || ""}
-                onChange={handleInputChange}
-                
-                
-              />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="โปรดระบุวันที่ชำระ"
+                    value={datetimepay} //รับมาจากการอัพเดท
+
+                    onChange={(newValue) => {
+                      setDatetimepay(newValue);
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              
+             
             </FormControl>
           </Grid>
 
@@ -318,37 +355,40 @@ useEffect(() => {
             <p>เจ้าหน้าที่การเงิน</p>
 
             <FormControl fullWidth variant="outlined">
-              <TextField
-                id="Bill_OfficerID"
-                
-                type="string"
-                size="medium"
-                value={bill.OfficerID || ""}
-                onChange={handleInputChange}
-                
-                
-              />
+            
+            <Select
+                                variant="outlined"
+                                id="OfficerID"
+                                value={officer?.ID+ ""}
+                                disabled
+                                onChange={handleSelectChange}
+                                inputProps={{
+                                    name: "OfficerID",
+                                }}
+
+                            >
+                                <option aria-label="None" value={officer?.ID} key={officer?.ID}>
+                                           {officer?.Name}
+                                  </option>
+                            
+                            </Select>
             </FormControl>
           </Grid>
-
-          
-
-          
+                 
 
          
           
           <Grid item xs={12}>
-            <Button component={RouterLink} to="/" variant="contained">
+            <Button component={RouterLink} to="/bills" variant="contained">
               Back
             </Button>
 
             <Button
-              style={{ float: "right" }}
-              onClick={submit}
-              variant="contained"
-              color="primary"
-              
-            >
+            style={{ float: "right" }} 
+                            onClick={submit} 
+                            variant="contained" 
+                            color="primary">
+                            
               ยืนยันการชำระเงิน
             </Button>
           </Grid>

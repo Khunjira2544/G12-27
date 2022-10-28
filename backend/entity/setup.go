@@ -43,7 +43,6 @@ func SetupDatabase() {
 		&Teaching_duration{},
 		&Content_difficulty_level{},
 		&Content_quality{},
-
 	)
 
 	db = database
@@ -124,44 +123,135 @@ func SetupDatabase() {
 	}
 	db.Model(&Collegeyear{}).Create(&P4)
 
-	T1 := Time{
-		Period: "10.00-11.00น.",
+	T001 := Time{
+		Period: "8.00-9.00น.(1)",
 	}
-	db.Model(&Time{}).Create(&T1)
+	db.Model(&Time{}).Create(&T001)
 
-	T2 := Time{
-		Period: "10.00-12.00น.",
+	T002 := Time{
+		Period: "8.00-10.00น.(2)",
 	}
-	db.Model(&Time{}).Create(&T2)
+	db.Model(&Time{}).Create(&T002)
 
-	T3 := Time{
-		Period: "10.00-13.00น.",
+	T003 := Time{
+		Period: "8.00-11.00น.(3)",
 	}
-	db.Model(&Time{}).Create(&T3)
+	db.Model(&Time{}).Create(&T003)
 
-	T4 := Time{
-		Period: "10.00-14.00น.",
+	T004 := Time{
+		Period: "8.00-12.00น.(4)",
 	}
-	db.Model(&Time{}).Create(&T4)
+	db.Model(&Time{}).Create(&T004)
+	T005 := Time{
+		Period: "9.00-10.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T005)
+
+	T006 := Time{
+		Period: "9.00-12.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T006)
+
+	T007 := Time{
+		Period: "10.00-11.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T007)
+
+	T008 := Time{
+		Period: "10.00-12.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T008)
+	T009 := Time{
+		Period: "11.00-12.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T009)
+
+	T010 := Time{
+		Period: "13.00-14.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T010)
+
+	T011 := Time{
+		Period: "13.00-15.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T011)
+
+	T012 := Time{
+		Period: "13.00-16.00น.(3)",
+	}
+	db.Model(&Time{}).Create(&T012)
+
+	T013 := Time{
+		Period: "14.00-15.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T013)
+
+	T014 := Time{
+		Period: "14.00-16.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T014)
+
+	T015 := Time{
+		Period: "15.00-16.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T015)
+
+	T016 := Time{
+		Period: "16.00-17.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T016)
+
+	T017 := Time{
+		Period: "17.00-18.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T017)
+
+	T018 := Time{
+		Period: "17.00-19.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T018)
+	T019 := Time{
+		Period: "17.00-20.00น.(3)",
+	}
+	db.Model(&Time{}).Create(&T019)
+
+	T020 := Time{
+		Period: "18.00-19.00น.(1)",
+	}
+	db.Model(&Time{}).Create(&T020)
+
+	T021 := Time{
+		Period: "18.00-20.00น.(2)",
+	}
+	db.Model(&Time{}).Create(&T021)
+
+	T022 := Time{
+		Period: "19.00-20.00น.(3)",
+	}
+	db.Model(&Time{}).Create(&T022)
+	T023 := Time{
+		Period: "10.00-16.00น.(8)",
+	}
+	db.Model(&Time{}).Create(&T023)
 
 	// --- Video Data  // ของเรา Teacher Data
-	T5001 := Teacher{
-		Name:    "สมชาย ทันสมัย",
-		Faculty: engineering,
-	}
-	db.Model(&Teacher{}).Create(&T5001)
+	// T5001 := Teacher{
+	// 	Name:    "สมชาย ทันสมัย",
+	// 	Faculty: engineering,
+	// }
+	// db.Model(&Teacher{}).Create(&T5001)
 
-	T5002 := Teacher{
-		Name:    "สมหญิง จุลทล",
-		Faculty: science,
-	}
-	db.Model(&Teacher{}).Create(&T5002)
+	// T5002 := Teacher{
+	// 	Name:    "สมหญิง จุลทล",
+	// 	Faculty: science,
+	// }
+	// db.Model(&Teacher{}).Create(&T5002)
 
-	T5003 := Teacher{
-		Name:    "มาสาย ประจำ",
-		Faculty: engineering,
-	}
-	db.Model(&Teacher{}).Create(&T5003)
+	// T5003 := Teacher{
+	// 	Name:    "มาสาย ประจำ",
+	// 	Faculty: engineering,
+	// }
+	// db.Model(&Teacher{}).Create(&T5003)
 
 	//bill
 	Payment_ID1 := Payment{
@@ -187,26 +277,7 @@ func SetupDatabase() {
 	}
 	db.Model(&Payment{}).Create(&Payment_ID3)
 
-	//--------------
-	//ตารางย่อย
-
-	//ตารางหลัก
-	// db.Model(&Bill{}).Create(&Bill{
-	// 	Bill_ID:             1,
-	// 	Datetimepay:         "30-08-2022",
-	// 	Bill_StudentID:      "6001",
-	// 	Bill_RegistrationID: "English for careers",
-	// 	Payment:             Payment_ID1,
-	// 	OfficerID:      Officer_Name,
-	// 	Total:               3200,
-	// })
-
-	//ประเมิณอาจารย์ของเพื่อน
-	//password
-	// phone_1, err := bcrypt.GenerateFromPassword([]byte("0935463156"), 14)
-	// phone_2, err := bcrypt.GenerateFromPassword([]byte("0917271607"), 14)
-
-	//Teaching_duration data
+	
 
 	duration_one := Teaching_duration{
 		Description: "ใช้เวลานานเกินไปในการสอน",

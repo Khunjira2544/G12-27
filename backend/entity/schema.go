@@ -121,7 +121,8 @@ type Student struct {
 
 	Registration       []Registration       `gorm:"foreignKey:StudentID"`
 	Teacher_assessment []Teacher_assessment `gorm:"foreignKey:Student_ID"`
-}
+	Bills              []Bill                `gorm:"foreignKey:StudentID"` ///New ////////////////
+} 
 
 type Registration struct {
 	gorm.Model
@@ -200,13 +201,18 @@ type Subject struct {
 	Time   Time `gorm:"references:id"`
 
 	Registration []Registration `gorm:"foreignKey:SubjectID"`
+	Bills     []Bill    `gorm:"foreignKey:SubjectID"`//New //////////////////////////////
 }
-
+//////////////////
 type Bill struct {
 	Bill_ID             uint `gorm:"primaryKey"`
 	Datetimepay         string
-	Bill_StudentID      string
-	Bill_RegistrationID string
+	StudentID      *uint
+	Student        Student    `gorm:"references:id"`
+	
+	SubjectID *uint
+	Subject  Subject `gorm:"references:id"`
+	
 
 	//FK
 	Payment_ID *string //ไม่ใช้ มันบัค`gorm:"references:payment_id"`
@@ -215,5 +221,6 @@ type Bill struct {
 	Total uint
 	//ต้องเพิ่มลงทะเบียน
 	OfficerID *uint
-	Officer   Officer
+	Officer   Officer `gorm:"references:id"`
 }
+

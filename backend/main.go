@@ -73,8 +73,9 @@ func main() {
 			router.GET("/bills", controller.ListBills)
 			router.GET("/bill/:bill_id", controller.GetBill)
 			router.POST("/bills", controller.CreateBill)
-			router.GET("/previous_bill", controller.GetPreviousBill)
-
+			router.PATCH("/bills", controller.UpdateBill)
+			router.DELETE("/bills/:id", controller.DeleteBill)
+			
 			router.GET("/payments", controller.ListPayments)
 			router.GET("/payment/:payment_id", controller.GetPayment)
 			router.POST("/payments", controller.CreatePayment)

@@ -15,45 +15,27 @@ import { GetBills } from "../services/HttpClientService";
 
 function Bills() {
   const [bills, setBills] = React.useState<BillsInterface[]>([]);
-
-  useEffect(() => {
-    GetBills();
-  }, []);
-
-  const getTeacher = async () => {
+  const  getBills = async () => {
     let res = await GetBills();
     if (res) {
-      setBills(res);
+        setBills(res);
+        console.log(res);
     }
-  };
+};
+  
 
-  const getBills = async () => {
-    const apiUrl = "http://localhost:8080/bills";
+  useEffect(() => {
+      getBills();
+  }, []);
 
-    const requestOptions = {
-      method: "GET",
-
-      headers: { "Content-Type": "application/json" },
-    };
-
-    fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-
-      .then((res) => {
-        console.log(res.data);
-
-        if (res.data) {
-          setBills(res.data);
-        }
-      });
-  };
+  
 
   const columns: GridColDef[] = [
     { field: "Bill_ID", headerName: "บิลที่", width: 100 },
 
-    { field: "Bill_StudentID", headerName: "รหัสนักศึกษา", width: 200 },
+    { field: "Student", headerName: "รหัสนักศึกษา", width: 200  , valueFormatter: (params) => params.value.S_ID,},
 
-    { field: "Bill_RegistrationID", headerName: "วิชา", width: 150 },
+    { field: "Subject", headerName: "วิชา", width: 150  , valueFormatter: (params) => params.value.Name, },
 
     { field: "Total", headerName: "จำนวนเงินที่ชำระ", width: 150 },
 

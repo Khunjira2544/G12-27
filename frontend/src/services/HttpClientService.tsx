@@ -7,6 +7,8 @@ import { StudentInterface } from "../models/IStudent";
 import { SubjectsInterface } from "../models/ISubject";
 import { TeachersInterface } from "../models/ITeacher";
 import { Teacher_assessmentsInterface } from "../models/ITeacher_assessment";
+import { BillsInterface } from "../models/IBill";
+import { PaymentsInterface } from "../models/IPayment";
 
 const apiUrl = "http://localhost:8080";
 
@@ -509,6 +511,78 @@ async function Subjects(data: SubjectsInterface) {
     return res;
 }
 
+
+//เพิ่ม
+async function Bills(data: BillsInterface) {
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    };
+
+    let res = await fetch(`${apiUrl}/bills`, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.data) {
+                return res.data;
+            } else {
+                return false;
+            }
+        });
+
+    return res;
+}
+
+async function CreateBill(data: BillsInterface) {
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    };
+
+    let res = await fetch(`${apiUrl}/bills`, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.data) {
+                console.log(res.data);
+                return res.data;
+            } else {
+                return false;
+            }
+        });
+
+    return res;
+}
+async function GetPayments() {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json"
+        },
+    };
+
+    let res = await fetch(`${apiUrl}/payments`, requestOptions)
+        .then((response) => response.json())
+        .then((res) => {
+            if (res.data) {
+                console.log(res.data);
+                return res.data;
+            } else {
+                return false;
+            }
+        });
+
+    return res;
+}
+///////////
+
 async function CreateTeacher(data: TeachersInterface) {
     const requestOptions = {
         method: "POST",
@@ -683,4 +757,8 @@ export {
 
     GetStudentByUID,
     GetOfficerByUID,
+
+    Bills,
+    CreateBill,
+    GetPayments,
 };
